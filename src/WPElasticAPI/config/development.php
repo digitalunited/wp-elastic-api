@@ -5,8 +5,8 @@
  * Used in case of WP_DEBUG == true
  */
 return array(
-	'host'          => 'elasticsearch.flowcom.io',
-	'port'          => '80',
+	'host'          => 'http://the-path-to-your-elasticsearch-host.io',
+	'port'          => '9200',
 	'index'         => 'wp-elastic-api',
 	'instance_name' => 'wp-elastic-api',
 	'base_path'     => '/app/plugins/wp-elastic-api',
