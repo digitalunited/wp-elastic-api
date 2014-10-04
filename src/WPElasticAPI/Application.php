@@ -36,15 +36,15 @@ class Application {
 		return defined( 'WP_ELASTIC_API_PORT' ) ? WP_ELASTIC_API_PORT : '80';
 	}
 
+	public function getInstanceName() {
+		return Application::InstanceName();
+	}
+
 	/**
 	 * TODO: Configuration option to be created
 	 */
-	public function getInstanceName() {
+	public static function InstanceName() {
 		return 'wp-elastic-api';
-	}
-
-	public function getBasePath() {
-		return Application::BasePath();
 	}
 
 	/**
@@ -52,6 +52,10 @@ class Application {
 	 */
 	public static function BasePath() {
 		return '/app/plugins/wp-elastic-api';
+	}
+
+	public function getBasePath() {
+		return Application::BasePath();
 	}
 
 	public function getBodyAsArray() {
@@ -65,7 +69,7 @@ class Application {
 	}
 
 	public function blockInvalidIPAddress() {
-		if( !in_array( $this->slim->request()->getIp(), $this->getValidIPAddresses() ) ) {
+		if ( ! in_array( $this->slim->request()->getIp(), $this->getValidIPAddresses() ) ) {
 			throw new \Exception( 'Request made from invalid IP-address: ' . $this->slim->request()->getIp() );
 		}
 	}
