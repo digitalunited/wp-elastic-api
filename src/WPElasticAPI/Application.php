@@ -15,43 +15,28 @@ class Application {
 		) );
 	}
 
-	/**
-	 * TODO: Configuration option to be created
-	 */
 	public function getElasticsearchIndex() {
-		return defined( 'WP_ELASTIC_API_INDEX' ) ? WP_ELASTIC_API_INDEX : 'wp-elastic-api';
+		return Configuration::get( 'index' );
 	}
 
-	/**
-	 * TODO: Configuration option to be created
-	 */
 	public function getElasticsearchHost() {
-		return defined( 'WP_ELASTIC_API_HOST' ) ? WP_ELASTIC_API_HOST : 'flowcom:Arkitekt1@elasticsearch.flowcom.io';
+		return Configuration::get( 'host' );
 	}
 
-	/**
-	 * TODO: Configuration option to be created
-	 */
 	public function getElasticsearchPort() {
-		return defined( 'WP_ELASTIC_API_PORT' ) ? WP_ELASTIC_API_PORT : '80';
+		return Configuration::get( 'port' );
 	}
 
 	public function getInstanceName() {
 		return Application::InstanceName();
 	}
 
-	/**
-	 * TODO: Configuration option to be created
-	 */
 	public static function InstanceName() {
-		return 'wp-elastic-api';
+		return Configuration::get( 'instance_name' );
 	}
 
-	/**
-	 * TODO: Configuration option to be created
-	 */
 	public static function BasePath() {
-		return '/app/plugins/wp-elastic-api';
+		return Configuration::get( 'base_path' );
 	}
 
 	public function getBasePath() {
@@ -76,15 +61,8 @@ class Application {
 
 	public function getValidIPAddresses() {
 
-		/**
-		 * TODO: Configuration option to be created
-		 */
-		$result = array(
-			'127.0.0.1',
-			'192.168.50.1',
-		);
+		return Configuration::get( 'valid_ip' );
 
-		return $result;
 	}
 
 
