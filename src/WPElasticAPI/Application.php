@@ -8,28 +8,37 @@ class Application {
 	public $elastica;
 
 	public function __construct( \Slim\Slim $slim = null ) {
-
-		$this->slim = ! empty( $slim ) ? $slim : \Slim\Slim::getInstance( $this->getInstanceName() );
-
+		$this->slim     = ! empty( $slim ) ? $slim : \Slim\Slim::getInstance( $this->getInstanceName() );
 		$this->elastica = new \Elastica\Client( array(
 			'host' => $this->getElasticsearchHost(),
 			'port' => $this->getElasticsearchPort()
 		) );
-
 	}
 
+	/**
+	 * TODO: Configuration option to be created
+	 */
 	public function getElasticsearchIndex() {
 		return defined( 'WP_ELASTIC_API_INDEX' ) ? WP_ELASTIC_API_INDEX : 'wp-elastic-api';
 	}
 
+	/**
+	 * TODO: Configuration option to be created
+	 */
 	public function getElasticsearchHost() {
 		return defined( 'WP_ELASTIC_API_HOST' ) ? WP_ELASTIC_API_HOST : 'flowcom:Arkitekt1@elasticsearch.flowcom.io';
 	}
 
+	/**
+	 * TODO: Configuration option to be created
+	 */
 	public function getElasticsearchPort() {
 		return defined( 'WP_ELASTIC_API_PORT' ) ? WP_ELASTIC_API_PORT : '80';
 	}
 
+	/**
+	 * TODO: Configuration option to be created
+	 */
 	public function getInstanceName() {
 		return 'wp-elastic-api';
 	}
@@ -38,6 +47,9 @@ class Application {
 		return Application::BasePath();
 	}
 
+	/**
+	 * TODO: Configuration option to be created
+	 */
 	public static function BasePath() {
 		return '/app/plugins/wp-elastic-api';
 	}
@@ -52,78 +64,81 @@ class Application {
 		return $body;
 	}
 
-	public function isValidToken( $account, $token ) {
+	public function blockInvalidIPAddress() {
+		if( !in_array( $this->slim->request()->getIp(), $this->getValidIPAddresses() ) ) {
+			throw new \Exception( 'Request made from invalid IP-address: ' . $this->slim->request()->getIp() );
+		}
+	}
+
+	public function getValidIPAddresses() {
 
 		/**
-		 * TODO: Some kind of auth instead
+		 * TODO: Configuration option to be created
 		 */
-		$valid_account = 'wp-elastic-api';
-		$valid_token   = 'password123';
+		$result = array(
+			'127.0.0.1',
+			'192.168.50.1',
+		);
 
-		if ( $account == $valid_account && $token == $valid_token ) {
-			return true;
-		}
-
-		return false;
-
+		return $result;
 	}
 
 
-	public function check_req_opt_param($rparam = array() , $optparam = array(), $uparam = array() ){
+	public function check_req_opt_param( $rparam = array(), $optparam = array(), $uparam = array() ) {
 
-		if ( ! is_array($rparam)
-		     || ! is_array($optparam)
-		     || ! is_array($uparam)) {
+		if ( ! is_array( $rparam )
+		     || ! is_array( $optparam )
+		     || ! is_array( $uparam )
+		) {
 
-			throw new \Exception('Parameters has to be arrays.');
+			throw new \Exception( 'Parameters has to be arrays.' );
 		}
 
 		//Final User i/p array
 		$uparam_final_array = array();
 
 		//Checking if req parameter exsist in user parameter
-		for($i = 0; $i < sizeof($rparam) ; $i++){
+		for ( $i = 0; $i < sizeof( $rparam ); $i ++ ) {
 
-			$req_param_chk = array_key_exists($rparam[$i], $uparam);
+			$req_param_chk = array_key_exists( $rparam[ $i ], $uparam );
 
 			//If Key Dont Exsist
-			if($req_param_chk == false){
-				throw new \Exception( "Required Parameter: '". $rparam[$i]."' is missing" );
+			if ( $req_param_chk == false ) {
+				throw new \Exception( "Required Parameter: '" . $rparam[ $i ] . "' is missing" );
 			} else { //If Key Present
 				// Checking If not set
-				if(!isset($uparam[$rparam[$i]])){
-					throw new \Exception( "Parameter: '".$rparam[$i]."' - must be specified" );
+				if ( ! isset( $uparam[ $rparam[ $i ] ] ) ) {
+					throw new \Exception( "Parameter: '" . $rparam[ $i ] . "' - must be specified" );
 				} else { //if Not empty
-					$uparam_final_array[$rparam[$i]] = $uparam[$rparam[$i]];
-					unset($uparam[$rparam[$i]]);
+					$uparam_final_array[ $rparam[ $i ] ] = $uparam[ $rparam[ $i ] ];
+					unset( $uparam[ $rparam[ $i ] ] );
 				}
 			}
 		}
 
 		// Optional Parameter Check
-		for($j = 0; $j < sizeof($optparam) ; $j++){
-			$optl_param_chk = array_key_exists($optparam[$j], $uparam);
+		for ( $j = 0; $j < sizeof( $optparam ); $j ++ ) {
+			$optl_param_chk = array_key_exists( $optparam[ $j ], $uparam );
 			//If Key Dont Exsist
-			if($optl_param_chk == false){
-				$uparam_final_array[$optparam[$j]] = null;
+			if ( $optl_param_chk == false ) {
+				$uparam_final_array[ $optparam[ $j ] ] = null;
 			} else { //if Key Present
 				//Checking if empty
-				if(empty($uparam[$optparam[$j]])){
-					$uparam_final_array[$optparam[$j]] = null;
+				if ( empty( $uparam[ $optparam[ $j ] ] ) ) {
+					$uparam_final_array[ $optparam[ $j ] ] = null;
 				} else { //if Not empty
-					$uparam_final_array[$optparam[$j]] = $uparam[$optparam[$j]];
+					$uparam_final_array[ $optparam[ $j ] ] = $uparam[ $optparam[ $j ] ];
 				}
-				unset($uparam[$optparam[$j]]);
+				unset( $uparam[ $optparam[ $j ] ] );
 			}
 		}
 
 		// Checking for invalid user parameters
-		if(sizeof($uparam) >= 1){
-			throw new \Exception( 'Invalid parameters for this command ('.join(',',array_keys($uparam)).')' );
+		if ( sizeof( $uparam ) >= 1 ) {
+			throw new \Exception( 'Invalid parameters for this command (' . join( ',', array_keys( $uparam ) ) . ')' );
 		}
 
 	}
-
 
 
 }

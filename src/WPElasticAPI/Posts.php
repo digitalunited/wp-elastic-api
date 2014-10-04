@@ -49,18 +49,8 @@ class Posts extends \DigitalUnited\WPElasticAPI\Application {
 	 *   path="/posts",
 	 *   @SWG\Operation(
 	 *     method="POST",
-	 *     summary="Create or update a post and returns the data[] if success",
+	 *     summary="Create or update a post and returns the data[] if success. This action requires valid IP-address.",
 	 *     nickname="posts_save",
-	 * 		@SWG\Parameter(
-	 *           name="username",
-	 *           required=true,
-	 *           type="string"
-	 *         ),
-	 * 		@SWG\Parameter(
-	 *           name="token",
-	 *           required=true,
-	 *           type="string"
-	 *         ),
 	 * 		@SWG\Parameter(
 	 *           name="post_type",
 	 *           required=true,
@@ -81,8 +71,10 @@ class Posts extends \DigitalUnited\WPElasticAPI\Application {
 	 */
 	function save() {
 
+		$this->blockInvalidIPAddress();
+
 		$body   = $this->getBodyAsArray();
-		$required_parameters = array( 'username', 'token', 'post_type', 'ID','data' );
+		$required_parameters = array( 'post_type', 'ID','data' );
 		$optional_parameters = array();
 		$this->check_req_opt_param( $required_parameters , $optional_parameters , $body );
 
@@ -103,18 +95,8 @@ class Posts extends \DigitalUnited\WPElasticAPI\Application {
 	 *   path="/posts/:id",
 	 *   @SWG\Operation(
 	 *     method="DELETE",
-	 *     summary="Deletes a post and returns true if success",
+	 *     summary="Deletes a post and returns true if success. This action requires valid IP-address.",
 	 *     nickname="posts_delete",
-	 * 		@SWG\Parameter(
-	 *           name="username",
-	 *           required=true,
-	 *           type="string"
-	 *         ),
-	 * 		@SWG\Parameter(
-	 *           name="token",
-	 *           required=true,
-	 *           type="string"
-	 *         ),
 	 * 		@SWG\Parameter(
 	 *           name="ID",
 	 *           required=true,
@@ -125,10 +107,12 @@ class Posts extends \DigitalUnited\WPElasticAPI\Application {
 	 */
 	function delete( $id ) {
 
-		$body   = $this->getBodyAsArray();
-		$required_parameters = array( 'username', 'token', 'post_type' );
+		$this->blockInvalidIPAddress();
+
+		$body                = $this->getBodyAsArray();
+		$required_parameters = array( 'post_type' );
 		$optional_parameters = array();
-		$this->check_req_opt_param( $required_parameters , $optional_parameters , $body );
+		$this->check_req_opt_param( $required_parameters, $optional_parameters, $body );
 
 		$index = $this->elastica->getIndex( $this->getElasticsearchIndex() );
 		$type  = $index->getType( $body['post_type'] );
