@@ -190,10 +190,19 @@ class Posts extends \DigitalUnited\WPElasticAPI\Application {
         $filterAnd = '';
         if ($filters) {
             $filterAnd = new \Elastica\Filter\BoolAnd();
-            foreach($filters as $key => $val) {
-                $filter = new \Elastica\Filter\Term();
-                $filter->setTerm($key, $val);
-                $filterAnd->addFilter($filter);
+            foreach($filters as $key => $vals) {
+                if (!is_array($vals)) {
+                    $vals = array($vals);
+                }
+
+                $filterOr = new \Elastica\Filter\BoolOr();
+                foreach ($vals as $val) {
+                    $filter = new \Elastica\Filter\Term();
+                    $filter->setTerm($key, $val);
+                    $filterOr->addFilter($filter);
+                }
+
+                $filterAnd->addFilter($filterOr);
             }
         }
 
@@ -214,12 +223,12 @@ class Posts extends \DigitalUnited\WPElasticAPI\Application {
         }
 
         $limit  = isset( $body['limit'] ) ? (int)$body['limit'] : null;
-        if( $limit ) {
+        if ( $limit ) {
             $query->setSize( $limit );
         }
 
-        $sort  = isset( $body['sort'] ) ? $body['sort'] : null;
-        if($sort ) {
+        $sort  = isset( $body['sort'] ) ? (array) $body['sort'] : null;
+        if ($sort) {
             $query->setSort( $sort ); // example: array( 'post_date' => array( 'order' => 'desc' ) )
         }
 
