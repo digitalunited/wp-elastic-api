@@ -189,22 +189,35 @@ class Posts extends \DigitalUnited\WPElasticAPI\Application {
 
         $filterAnd = '';
         if ($filters) {
-            $filterAnd = new \Elastica\Filter\BoolAnd();
             foreach($filters as $key => $vals) {
                 if (!is_array($vals)) {
                     $vals = array($vals);
                 }
 
-                $filterOr = new \Elastica\Filter\BoolOr();
-                foreach ($vals as $val) {
-                    $filter = new \Elastica\Filter\Term();
-                    $filter->setTerm($key, $val);
-                    $filterOr->addFilter($filter);
-                }
+                if (strpos(implode('', $vals), '*')) {
 
-                $filterAnd->addFilter($filterOr);
+                    foreach ($vals as $val) {
+                        $extraQuery = new \Elastica\Query\SimpleQueryString($val, array($key));
+                        $boolean->addMust($extraQuery);
+                    }
+
+                } else {
+                    $filterOr = new \Elastica\Filter\BoolOr();
+                    foreach ($vals as $val) {
+                        $filter = new \Elastica\Filter\Term();
+                        $filter->setTerm($key, $val);
+                        $filterOr->addFilter($filter);
+                    }
+
+                    if(!$filterAnd) {
+                        $filterAnd = new \Elastica\Filter\BoolAnd();
+                    }
+
+                    $filterAnd->addFilter($filterOr);
+                }
             }
         }
+
 
         $search_phrase  = isset( $body['search_phrase'] ) ? $body['search_phrase'] : null;
         if ( isset( $search_phrase ) && ! empty( $search_phrase ) ) {
