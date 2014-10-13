@@ -168,7 +168,7 @@ class Posts extends \DigitalUnited\WPElasticAPI\Application {
 
         $body   = $this->getBodyAsArray();
         $required_parameters = array();
-        $optional_parameters = array( 'post_type', 'filters', 'search_phrase', 'sort', 'limit' );
+        $optional_parameters = array( 'post_type', 'filters', 'search_phrase', 'sort', 'limit', 'size', 'from');
         $this->check_req_opt_param( $required_parameters , $optional_parameters , $body );
 
         $index = $this->elastica->getIndex( $this->getElasticsearchIndex() );
@@ -245,15 +245,19 @@ class Posts extends \DigitalUnited\WPElasticAPI\Application {
             $query->setSort( $sort ); // example: array( 'post_date' => array( 'order' => 'desc' ) )
         }
 
-        $elasticaResultSet = $index->search( $query );
+        $body['from'] = isset($body['from']) && $body['from'] ? $body['from'] : 0;
+        $body['size'] = isset($body['size']) && $body['size'] ? $body['size'] : 1000;
 
-        $elasticaResults = $elasticaResultSet->getResults();
+        $elasticaResultSet = $index->search( $query, ['from' => $body['from'], 'size' => $body['size']] );
 
-        foreach ( $elasticaResults as $elasticaResult ) {
+        foreach ($elasticaResultSet->getResults() as $elasticaResult ) {
             $result[] = $elasticaResult->getData();
         }
 
-        echo json_encode( $result );
+        echo json_encode(array(
+            'hits' => $result,
+            'count' => $index->count($query),
+        ));
 
     }
 
