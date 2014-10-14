@@ -47,9 +47,8 @@ class Configuration {
         $full_path = $configuration_folder . $file_name;
 
         if ( ! is_readable( $full_path ) ) {
-            throw new \Exception( sprintf( "File %s could not be read", $full_path ) );
+            $full_path .= '.example';
         }
-
         $default_config = include $full_path;
 
         self::$_configuration = (object) self::apply_user_overwrites( $default_config );
