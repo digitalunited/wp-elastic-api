@@ -3,7 +3,7 @@
     "description": "API to store posts from WordPress to Elasticsearch and back.",
     "keywords": ["wordpress", "plugin"],
     "homepage": "https://github.com/digitalunited/wp-elastic-api",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "license": "MIT",
     "authors": [
         {
