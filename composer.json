@@ -1,34 +1,35 @@
 {
-	"name": "digitalunited/wp-elastic-api",
-	"description": "API to store posts from WordPress to Elasticsearch and back.",
-	"keywords": ["wordpress", "plugin"],
-	"homepage": "https://github.com/digitalunited/wp-elastic-api",
-	"version": "0.1",
-	"license": "MIT",
-	"authors": [
-		{
-			"name": "Mikael Engström",
-			"email": "mikael.engstrom@careofhaus.se",
-			"homepage": "http://www.careofhaus.io"
-		},
-		{
-			"name": "Andreas Ek",
-			"email": "andreas.ek@careofhaus.se",
-			"homepage": "http://www.careofhaus.io"
-		}
-	],
-	"type": "wordpress-plugin",
-	"autoload"   : {
-		"psr-4": {
-			"DigitalUnited\\WPElasticAPI\\": "src/WPElasticAPI"
-		}
-	},
-	"repositories": {
-		"packagist": { "url": "https://packagist.org", "type": "composer" }
-	},
-	"require": {
-		"ruflin/elastica": "1.*",
-		"slim/slim": "2.*",
-		"zircote/swagger-php": "0.*"
-	}
+    "name": "digitalunited/wp-elastic-api",
+    "description": "API to store posts from WordPress to Elasticsearch and back.",
+    "keywords": ["wordpress", "plugin"],
+    "homepage": "https://github.com/digitalunited/wp-elastic-api",
+    "version": "0.1",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mikael Engström",
+            "email": "mikael.engstrom@careofhaus.se",
+            "homepage": "http://www.careofhaus.io"
+        },
+        {
+            "name": "Andreas Ek",
+            "email": "andreas.ek@careofhaus.se",
+            "homepage": "http://www.careofhaus.io"
+        }
+    ],
+    "type": "wordpress-plugin",
+    "autoload"   : {
+        "psr-4": {
+            "DigitalUnited\\WPElasticAPI\\": "src/WPElasticAPI"
+        }
+    },
+    "repositories": {
+        "packagist": { "url": "https://packagist.org", "type": "composer" }
+    },
+    "require": {
+        "composer/installers": "v1.0.6",
+        "ruflin/elastica": "1.*",
+        "slim/slim": "2.*",
+        "zircote/swagger-php": "0.*"
+    }
 }
