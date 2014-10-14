@@ -53,7 +53,7 @@ class Configuration {
 
         self::$_configuration = (object) self::apply_user_overwrites( $default_config );
 
-        return $default_config;
+        return self::$_configuration;
     }
 
     /**

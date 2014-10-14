@@ -232,7 +232,7 @@ class Posts extends \DigitalUnited\WPElasticAPI\Application {
         }
 
         if ($filterAnd) {
-            $query->setFilter($filterAnd);
+            $query->setPostFilter($filterAnd);
         }
 
         $limit  = isset( $body['limit'] ) ? (int)$body['limit'] : null;
