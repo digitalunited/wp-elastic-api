@@ -27,7 +27,7 @@
         "packagist": { "url": "https://packagist.org", "type": "composer" }
     },
     "require": {
-        "composer/installers": "v1.0.6",
+        "composer/installers": "~1.0",
         "ruflin/elastica": "1.*",
         "slim/slim": "2.*",
         "zircote/swagger-php": "0.*"
