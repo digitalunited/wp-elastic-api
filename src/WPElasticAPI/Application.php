@@ -65,9 +65,8 @@ class Application {
     }
 
     public function getValidIPAddresses() {
-
-        return Configuration::get( 'valid_ip' );
-
+        $ips = Configuration::get( 'valid_ip' );
+        return is_array($ips) ? $ips : array($ips);
     }
 
 
