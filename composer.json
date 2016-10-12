@@ -28,7 +28,7 @@
     },
     "require": {
         "composer/installers": "~1.0",
-        "ruflin/elastica": "1.*",
+        "ruflin/elastica": "*",
         "slim/slim": "2.*",
         "zircote/swagger-php": "0.*"
     }
